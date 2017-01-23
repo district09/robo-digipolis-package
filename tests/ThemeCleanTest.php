@@ -47,7 +47,7 @@ class ThemeCleanTest extends \PHPUnit_Framework_TestCase implements ContainerAwa
     public function testRun()
     {
         $themePath = realpath(__DIR__ . '/../testfiles/testtheme');
-        $compileResult = $this->taskThemeCompile($themePath)->run();
+        $compileResult = $this->taskThemeCompile($themePath, 'build')->run();
         $this->assertEquals(0, $compileResult->getExitCode());
         $result = $this->taskThemeClean($themePath)
           ->run();
@@ -58,11 +58,10 @@ class ThemeCleanTest extends \PHPUnit_Framework_TestCase implements ContainerAwa
         // Assert cleanup of bundler files.
         $bundlerFiles = [
             '/vendor/bundle',
-            '/Gemfile',
             '/.bundle',
         ];
         foreach ($bundlerFiles as $bundlerFile) {
-          $this->assertFileNotExists($themePath . $bundlerFiles);
+          $this->assertFileNotExists($themePath . $bundlerFile);
         }
 
         // Assert cleanup of npm files.

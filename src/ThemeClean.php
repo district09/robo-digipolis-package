@@ -32,20 +32,20 @@ class ThemeClean extends ParallelExec {
     public function run()
     {
         if (file_exists($this->dir . '/Gemfile')) {
-            $this->processes[] = new Process($this->receiveCommand('rm -rf vendor/bundle'), $this->dir);
-            $this->processes[] = new Process($this->receiveCommand('rm -rf .bundle'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('rm -rf vendor/bundle'), $this->dir, null, null, null);
+            $this->processes[] = new Process($this->receiveCommand('rm -rf .bundle'), $this->dir, null, null, null);
         }
 
         if (file_exists($this->dir . '/package.json')) {
-            $this->processes[] = new Process($this->receiveCommand('for package in `ls node_modules`; do npm uninstall $package; done; rm -rf node_modules/;'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('rm -rf node_modules'), $this->dir, null, null, null);
         }
 
         if (file_exists($this->dir . '/bower.json')) {
-            $this->processes[] = new Process($this->receiveCommand('bower cache clean'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('bower cache clean'), $this->dir, null, null, null);
         }
 
         if (file_exists($this->dir . '/Gruntfile.js') || file_exists($this->dir . '/gulpfile.js')) {
-            $this->processes[] = new Process($this->receiveCommand('rm -rf .sass-cache'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('rm -rf .sass-cache'), $this->dir, null, null, null);
         }
 
         return parent::run();
