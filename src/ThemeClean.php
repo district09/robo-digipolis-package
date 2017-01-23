@@ -33,12 +33,24 @@ class ThemeClean extends ParallelExec {
     {
         if (file_exists($this->dir . '/Gemfile')) {
             $this->processes[] = new Process($this->receiveCommand('rm -rf vendor/bundle'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('rm -rf Gemfile'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('rm -rf .ruby-gemset'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('rm -rf .ruby-version'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('rm -rf config.rb'), $this->dir);
         }
+
         if (file_exists($this->dir . '/package.json')) {
             $this->processes[] = new Process($this->receiveCommand('for package in `ls node_modules`; do npm uninstall $package; done; rm -rf node_modules/;'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('rm -rf package.json'), $this->dir);
         }
+
         if (file_exists($this->dir . '/bower.json')) {
             $this->processes[] = new Process($this->receiveCommand('bower cache clean'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('rm -rf .bowerrc'), $this->dir);
+        }
+
+        if (file_exists($this->dir . '/Gruntfile.js') || file_exists($this->dir . '/gulpfile.js')) {
+            $this->processes[] = new Process($this->receiveCommand('rm -rf .sass-cache'), $this->dir);
         }
 
         return parent::run();
