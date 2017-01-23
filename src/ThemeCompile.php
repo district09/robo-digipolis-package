@@ -43,13 +43,13 @@ class ThemeCompile extends ParallelExec {
     public function run()
     {
         if (file_exists($this->dir . '/Gemfile')) {
-            $this->processes[] = new Process($this->receiveCommand('bundle install --deployment --no-cache'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('bundle install --deployment --no-cache'), $this->dir, null, null, null);
         }
         if (file_exists($this->dir . '/package.json')) {
-            $this->processes[] = new Process($this->receiveCommand('npm install'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('npm install'), $this->dir, null, null, null);
         }
         if (file_exists($this->dir . '/bower.json')) {
-            $this->processes[] = new Process($this->receiveCommand('bower install'), $this->dir);
+            $this->processes[] = new Process($this->receiveCommand('bower install'), $this->dir, null, null, null);
         }
         // Grunt and/or gulp must way for the previous processes to finish.
         $result =  parent::run();
@@ -58,10 +58,10 @@ class ThemeCompile extends ParallelExec {
         }
         $this->processes = [];
         if (file_exists($this->dir . '/Gruntfile.js')) {
-            $this->processes[] = new Process($this->receiveCommand('grunt ' . $this->command, $this->dir));
+            $this->processes[] = new Process($this->receiveCommand('grunt ' . $this->command), $this->dir, null, null, null);
         }
         if (file_exists($this->dir . '/gulpfile.js')) {
-            $this->processes[] = new Process($this->receiveCommand('gulp ' . $this->command, $this->dir));
+            $this->processes[] = new Process($this->receiveCommand('gulp ' . $this->command), $this->dir, null, null, null);
         }
         return parent::run();
     }
