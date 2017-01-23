@@ -8,7 +8,7 @@ General Packaging/Compile tasks for Robo Task Runner
 [![PHP 7 ready](http://php7ready.timesplinter.ch/digipolisgent/robo-drupal-package/develop/badge.svg)](https://travis-ci.org/digipolisgent/robo-drupal-package)
 [![License](https://poser.pugx.org/digipolisgent/robo-digipolis-package/license)](https://packagist.org/packages/digipolisgent/robo-digipolis-package)
 
-TODO: Travis build status badge
+[![Build Status](https://travis-ci.org/digipolisgent/robo-digipolis-package.svg?branch=develop)](https://travis-ci.org/digipolisgent/robo-digipolis-package)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/1f156f4e-6537-46ae-a946-dec578631d95/mini.png)](https://insight.sensiolabs.com/projects/1f156f4e-6537-46ae-a946-dec578631d95)
 [![Code Climate](https://codeclimate.com/github/digipolisgent/robo-digipolis-package/badges/gpa.svg)](https://codeclimate.com/github/digipolisgent/robo-digipolis-package)
 [![Test Coverage](https://codeclimate.com/github/digipolisgent/robo-digipolis-package/badges/coverage.svg)](https://codeclimate.com/github/digipolisgent/robo-digipolis-package/coverage)
