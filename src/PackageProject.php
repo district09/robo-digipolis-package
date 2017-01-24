@@ -28,13 +28,9 @@ class PackageProject extends Pack
     public function __construct($archiveFile, $dir = null)
     {
         parent::__construct($archiveFile);
-        if (is_null($dir)) {
-            $projectRoot = $this->getConfig->get('digipolis.root.project', null);
-            $dir = is_null($projectRoot)
-                ? getcwd()
-                : $projectRoot;
-        }
-        $this->dir = realpath($dir);
+        $this->dir = is_null($dir)
+            ? $dir
+            : realpath($dir);
     }
 
 
@@ -46,7 +42,14 @@ class PackageProject extends Pack
      */
     protected function getFiles()
     {
-        return [$this->dir];
+        $dir = $this->dir;
+        if (is_null($dir)) {
+            $projectRoot = $this->getConfig()->get('digipolis.root.project', null);
+            $dir = is_null($projectRoot)
+                ? getcwd()
+                : $projectRoot;
+        }
+        return [$dir];
     }
 
     /**
