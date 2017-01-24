@@ -49,11 +49,13 @@ class ThemeCleanTest extends \PHPUnit_Framework_TestCase implements ContainerAwa
         $themePath = realpath(__DIR__ . '/../testfiles/testtheme');
         $compileResult = $this->taskThemeCompile($themePath, 'build')->run();
         $this->assertEquals(0, $compileResult->getExitCode());
+        $this->assertEquals(0, $compileResult->getMessage());
         $result = $this->taskThemeClean($themePath)
           ->run();
 
         // Assert response.
         $this->assertEquals(0, $result->getExitCode());
+        $this->assertEquals('', $result->getMessage());
 
         // Assert cleanup of bundler files.
         $bundlerFiles = [
