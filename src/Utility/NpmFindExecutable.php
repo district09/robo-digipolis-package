@@ -36,11 +36,11 @@ trait NpmFindExecutable
     {
         $nodeModules = $this->findNodeModules();
         if ($nodeModules) {
-          $finder = new Finder();
-          $finder->files()->in($nodeModules)->name($cmd);
-          foreach ($finder as $executable) {
-            return $executable->getRealPath();
-          }
+            $finder = new Finder();
+            $finder->files()->in($nodeModules)->name($cmd);
+            foreach ($finder as $executable) {
+                return $executable->getRealPath();
+            }
         }
         $execFinder = new ExecutableFinder();
         return $execFinder->find($cmd, null, []);

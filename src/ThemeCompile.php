@@ -93,7 +93,7 @@ class ThemeCompile extends ParallelExec
             );
         }
         if (file_exists($this->dir . '/gulpfile.js')) {
-            $gulp = $this->findExecutable('gulp');
+            $gulp = $this->findExecutable('gulp') ? : $this->findExecutable('gulp.js');
             $this->processes[] = new Process(
                 $this->receiveCommand($gulp . ' ' . $this->command),
                 $this->dir,
