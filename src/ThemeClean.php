@@ -34,7 +34,7 @@ class ThemeClean extends ParallelExec
     public function run()
     {
         // Clean bower cache before removing node_modules.
-        $result = FALSE;
+        $result = false;
         if (file_exists($this->dir . '/bower.json')) {
             $bower = $this->findExecutable('bower');
             $this->processes[] = new Process(
