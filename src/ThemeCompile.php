@@ -6,6 +6,7 @@ use Robo\Task\Base\ParallelExec;
 use Symfony\Component\Process\Process;
 
 class ThemeCompile extends ParallelExec {
+    use \Robo\Common\ExecCommand;
 
     /**
      * The directory of the theme to compile.
@@ -43,25 +44,30 @@ class ThemeCompile extends ParallelExec {
     public function run()
     {
         if (file_exists($this->dir . '/Gemfile')) {
-            $this->processes[] = new Process($this->receiveCommand('bundle install --deployment --no-cache'), $this->dir, null, null, null);
+            $bundle = $this->findExecutable('bundle');
+            $this->processes[] = new Process($this->receiveCommand($bundle . ' install --deployment --no-cache'), $this->dir, null, null, null);
         }
         if (file_exists($this->dir . '/package.json')) {
-            $this->processes[] = new Process($this->receiveCommand('npm install'), $this->dir, null, null, null);
+            $npm = $this->findExecutable('npm');
+            $this->processes[] = new Process($this->receiveCommand($npm . ' install'), $this->dir, null, null, null);
         }
         if (file_exists($this->dir . '/bower.json')) {
-            $this->processes[] = new Process($this->receiveCommand('bower install'), $this->dir, null, null, null);
+            $bower = $this->findExecutable('bower');
+            $this->processes[] = new Process($this->receiveCommand($bower . ' install'), $this->dir, null, null, null);
         }
         // Grunt and/or gulp must way for the previous processes to finish.
         $result =  parent::run();
         if (!$result->getExitCode() === 0) {
-          return $result;
+            return $result;
         }
         $this->processes = [];
         if (file_exists($this->dir . '/Gruntfile.js')) {
-            $this->processes[] = new Process($this->receiveCommand('grunt ' . $this->command), $this->dir, null, null, null);
+            $grunt = $this->findExecutable('grunt');
+            $this->processes[] = new Process($this->receiveCommand($grunt . ' ' . $this->command), $this->dir, null, null, null);
         }
         if (file_exists($this->dir . '/gulpfile.js')) {
-            $this->processes[] = new Process($this->receiveCommand('gulp ' . $this->command), $this->dir, null, null, null);
+            $gulp = $this->findExecutable('gulp');
+            $this->processes[] = new Process($this->receiveCommand($gulp . ' ' . $this->command), $this->dir, null, null, null);
         }
         return parent::run();
     }
