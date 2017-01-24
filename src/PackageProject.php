@@ -15,6 +15,13 @@ class PackageProject extends Pack
      */
     protected $dir;
 
+    /**
+     * File names to ignore.
+     *
+     * @var array
+     */
+    protected $ignoreFileNames = [];
+
 
     /**
      * Create a new PackageProject task.
@@ -33,6 +40,22 @@ class PackageProject extends Pack
             : realpath($dir);
     }
 
+    /**
+     * Exclude filenames from the archive.
+     *
+     * @param array $fileNames
+     *   File names to ignore.
+     *
+     * @return $this
+     *
+     * @codeCoverageIgnore
+     */
+    public function ignoreFileNames($fileNames)
+    {
+        $this->ignoreFileNames = $fileNames;
+
+        return $this;
+    }
 
     /**
      * Get the files and directories to package.
