@@ -6,6 +6,7 @@ use Robo\Task\Base\ParallelExec;
 use Symfony\Component\Process\Process;
 
 class ThemeClean extends ParallelExec {
+    use Utility\FindExecutable;
 
     /**
      * The directory of the theme to clean.
@@ -41,7 +42,8 @@ class ThemeClean extends ParallelExec {
         }
 
         if (file_exists($this->dir . '/bower.json')) {
-            $this->processes[] = new Process($this->receiveCommand('bower cache clean'), $this->dir, null, null, null);
+            $bower = $this->findExecutable('bower');
+            $this->processes[] = new Process($this->receiveCommand($bower . ' cache clean'), $this->dir, null, null, null);
         }
 
         if (file_exists($this->dir . '/Gruntfile.js') || file_exists($this->dir . '/gulpfile.js')) {

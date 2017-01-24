@@ -52,16 +52,17 @@ class ThemeCompile extends ParallelExec {
             $npm = $this->findExecutable('npm');
             $this->processes[] = new Process($this->receiveCommand($npm . ' install'), $this->dir, null, null, null);
         }
-        if (file_exists($this->dir . '/bower.json')) {
-            $bower = $this->findExecutable('bower');
-            $this->processes[] = new Process($this->receiveCommand($bower . ' install'), $this->dir, null, null, null);
-        }
-        // Grunt and/or gulp must way for the previous processes to finish.
+
+        // Grunt/gulp and bower must wait for the previous processes to finish.
         $result =  parent::run();
         if (!$result->getExitCode() === 0) {
             return $result;
         }
         $this->processes = [];
+        if (file_exists($this->dir . '/bower.json')) {
+            $bower = $this->findExecutable('bower');
+            $this->processes[] = new Process($this->receiveCommand($bower . ' install'), $this->dir, null, null, null);
+        }
         if (file_exists($this->dir . '/Gruntfile.js')) {
             $grunt = $this->findExecutable('grunt');
             $this->processes[] = new Process($this->receiveCommand($grunt . ' ' . $this->command), $this->dir, null, null, null);
