@@ -6,7 +6,8 @@ use Robo\Task\Base\ParallelExec;
 use Symfony\Component\Process\Process;
 
 class ThemeCompile extends ParallelExec {
-    use \Robo\Common\ExecCommand;
+
+    use Utility\FindExecutable;
 
     /**
      * The directory of the theme to compile.
