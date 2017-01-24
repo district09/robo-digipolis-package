@@ -51,8 +51,8 @@ class ThemeCompileTest extends \PHPUnit_Framework_TestCase implements ContainerA
           ->run();
 
         // Assert response.
-        $this->assertEquals(0, $result->getExitCode());
         $this->assertEquals('', $result->getMessage());
+        $this->assertEquals(0, $result->getExitCode());
 
         // Assert bower install ran.
         $this->assertFileExists($themePath . '/vendor/bundle');
