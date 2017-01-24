@@ -4,7 +4,8 @@ namespace DigipolisGent\Robo\Task\Package;
 
 use Robo\Task\Archive\Pack;
 
-class PackageProject extends Pack {
+class PackageProject extends Pack
+{
 
     /**
      * The directory to package. Defaults to digipolis.root.project, or to the
@@ -28,10 +29,10 @@ class PackageProject extends Pack {
     {
         parent::__construct($archiveFile);
         if (is_null($dir)) {
-          $projectRoot = $this->getConfig->get('digipolis.root.project', null);
-          $dir = is_null($projectRoot)
-            ? getcwd()
-            : $projectRoot;
+            $projectRoot = $this->getConfig->get('digipolis.root.project', null);
+            $dir = is_null($projectRoot)
+                ? getcwd()
+                : $projectRoot;
         }
         $this->dir = realpath($dir);
     }
@@ -39,11 +40,12 @@ class PackageProject extends Pack {
 
     /**
      * Get the files and directories to package.
-     * 
+     *
      * @return array
      *   The list of files and directories to package.
      */
-    protected function getFiles() {
+    protected function getFiles()
+    {
         return [$this->dir];
     }
 

@@ -48,14 +48,14 @@ class ThemeCleanTest extends \PHPUnit_Framework_TestCase implements ContainerAwa
     {
         $themePath = realpath(__DIR__ . '/../testfiles/testtheme');
         $compileResult = $this->taskThemeCompile($themePath, 'build')->run();
-        $this->assertEquals(0, $compileResult->getExitCode());
         $this->assertEquals('', $compileResult->getMessage());
+        $this->assertEquals(0, $compileResult->getExitCode());
         $result = $this->taskThemeClean($themePath)
           ->run();
 
         // Assert response.
-        $this->assertEquals(0, $result->getExitCode());
         $this->assertEquals('', $result->getMessage());
+        $this->assertEquals(0, $result->getExitCode());
 
         // Assert cleanup of bundler files.
         $bundlerFiles = [
@@ -88,9 +88,6 @@ class ThemeCleanTest extends \PHPUnit_Framework_TestCase implements ContainerAwa
         if (!is_string($directory)) {
             throw \PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
         }
-
-        static::assertDirectoryExists($directory, $message);
-        static::assertDirectoryIsReadable($directory, $message);
 
         $constraint = new \PHPUnit_Framework_Constraint_IsTrue();
         if (!is_readable($directory)) {
