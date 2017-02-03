@@ -8,6 +8,9 @@ trait ThemeClean
 
     public function digipolisThemeClean($dir = null)
     {
+        if (is_callable([$this, 'readProperties'])) {
+            $this->readProperties();
+        }
         $this->taskThemeClean($dir)->run();
     }
 }
