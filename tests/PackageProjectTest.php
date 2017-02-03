@@ -21,6 +21,8 @@ class PackageProjectTest extends \PHPUnit_Framework_TestCase implements Containe
     use \Robo\Task\Base\loadTasks;
     use \Robo\Common\ConfigAwareTrait;
 
+    protected $tarname = 'project.tar.gz';
+
     /**
      * Set up the Robo container so that we can create tasks in our tests.
      */
@@ -29,6 +31,11 @@ class PackageProjectTest extends \PHPUnit_Framework_TestCase implements Containe
         $container = Robo::createDefaultContainer(null, new NullOutput());
         $this->setContainer($container);
         $this->setConfig(Robo::config());
+    }
+
+    public function tearDown()
+    {
+        unlink($this->tarname);
     }
 
     /**
@@ -49,18 +56,17 @@ class PackageProjectTest extends \PHPUnit_Framework_TestCase implements Containe
     {
         $projectPath = realpath(__DIR__ . '/../testfiles');
         $this->getConfig()->set('digipolis.root.project', $projectPath);
-        $tarname = 'project.tar.gz';
-        $result = $this->taskPackageProject($tarname)->run();
+        $result = $this->taskPackageProject($this->tarname)->run();
 
         // Assert response.
         $this->assertEquals('', $result->getMessage());
         $this->assertEquals(0, $result->getExitCode());
 
         // Assert the tar was created.
-        $this->assertFileExists($tarname);
+        $this->assertFileExists($this->tarname);
 
         // Assert the tar contents.
-        $tar = new \Archive_Tar($tarname);
+        $tar = new \Archive_Tar($this->tarname);
         $archiveFiles = [];
         foreach ($tar->listContent() as $archiveFile) {
           $archiveFiles[$archiveFile['filename']] = $archiveFile;
@@ -76,6 +82,5 @@ class PackageProjectTest extends \PHPUnit_Framework_TestCase implements Containe
             unset($archiveFiles[$path]);
         }
         $this->assertEmpty($archiveFiles);
-        unlink($tarname);
     }
 }

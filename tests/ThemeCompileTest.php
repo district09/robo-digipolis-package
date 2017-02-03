@@ -20,6 +20,8 @@ class ThemeCompileTest extends \PHPUnit_Framework_TestCase implements ContainerA
     use \Robo\Task\Base\loadTasks;
     use \Robo\Common\ConfigAwareTrait;
 
+    protected $themePath;
+
     /**
      * Set up the Robo container so that we can create tasks in our tests.
      */
@@ -28,6 +30,23 @@ class ThemeCompileTest extends \PHPUnit_Framework_TestCase implements ContainerA
         $container = Robo::createDefaultContainer(null, new NullOutput());
         $this->setContainer($container);
         $this->setConfig(Robo::config());
+        $this->themePath = realpath(__DIR__ . '/../testfiles/testtheme');
+    }
+
+    public function tearDown()
+    {
+        // Manual cleanup.
+        $files = [
+          '/.bundle',
+          '/hello_gulp.txt',
+          '/hello_grunt.txt',
+          '/libraries',
+          '/node_modules',
+          '/vendor',
+        ];
+        foreach ($files as $remove) {
+            exec('rm -rf ' . $this->themePath . $remove);
+        }
     }
 
     /**
@@ -46,40 +65,27 @@ class ThemeCompileTest extends \PHPUnit_Framework_TestCase implements ContainerA
 
     public function testRun()
     {
-        $themePath = realpath(__DIR__ . '/../testfiles/testtheme');
-        $result = $this->taskThemeCompile($themePath, 'build')
-          ->run();
+        $result = $this->taskThemeCompile($this->themePath, 'build')
+            ->run();
 
         // Assert response.
         $this->assertEquals('', $result->getMessage());
         $this->assertEquals(0, $result->getExitCode());
 
         // Assert bower install ran.
-        $this->assertFileExists($themePath . '/vendor/bundle');
+        $this->assertFileExists($this->themePath . '/vendor/bundle');
 
         // Assert npm install ran.
-        $this->assertFileExists($themePath . '/node_modules');
+        $this->assertFileExists($this->themePath . '/node_modules');
 
         // Assert bower install ran.
-        $this->assertFileExists($themePath . '/libraries');
+        $this->assertFileExists($this->themePath . '/libraries');
 
         // Assert grunt build ran.
-        $this->assertFileExists($themePath . '/hello_grunt.txt');
+        $this->assertFileExists($this->themePath . '/hello_grunt.txt');
 
         // Assert gulp build ran.
-        $this->assertFileExists($themePath . '/hello_gulp.txt');
+        $this->assertFileExists($this->themePath . '/hello_gulp.txt');
 
-        // Manual cleanup.
-        $files = [
-          '/.bundle',
-          '/hello_gulp.txt',
-          '/hello_grunt.txt',
-          '/libraries',
-          '/node_modules',
-          '/vendor',
-        ];
-        foreach ($files as $remove) {
-          exec('rm -rf ' . $themePath . $remove);
-        }
     }
 }
