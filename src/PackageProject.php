@@ -87,8 +87,8 @@ class PackageProject extends Pack
             $realPath = $file->getRealPath();
             if (is_dir($realPath)) {
                 $subDirFinder = clone $finderClone;
-                // This is a directory that contains files that will be added. So
-                // don't add the directory or files will be added twice.
+                // This is a directory that contains files that will be added.
+                // So don't add the directory or files will be added twice.
                 if ($subDirFinder->in($realPath)->files()->count()) {
                     continue;
                 }
