@@ -8,6 +8,9 @@ trait ThemeCompile
 
     public function digipolisThemeCompile($dir = null, $command = 'compile')
     {
+        if (is_callable([$this, 'readProperties'])) {
+            $this->readProperties();
+        }
         $this->taskThemeCompile($dir, $command)->run();
     }
 }
