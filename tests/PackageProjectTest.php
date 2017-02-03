@@ -68,9 +68,12 @@ class PackageProjectTest extends \PHPUnit_Framework_TestCase implements Containe
         $finder = new Finder();
         $finder->in($projectPath)->ignoreDotFiles(FALSE);
         foreach ($finder as $file) {
-          $path = substr($file->getRealPath(), strlen($projectPath) + 1);
-          $this->assertArrayHasKey($path, $archiveFiles);
-          unset($archiveFiles[$path]);
+            if ($file->isDir()) {
+                continue;
+            }
+            $path = substr($file->getRealPath(), strlen($projectPath) + 1);
+            $this->assertArrayHasKey($path, $archiveFiles);
+            unset($archiveFiles[$path]);
         }
         $this->assertEmpty($archiveFiles);
         unlink($tarname);
