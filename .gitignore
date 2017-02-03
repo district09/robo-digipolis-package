@@ -3,3 +3,9 @@ composer.phar
 composer.lock
 /build
 /coverage.clover
+/testfiles/testtheme/vendor
+/testfiles/testtheme/node_modules
+/testfiles/testtheme/.bundle
+/testfiles/testtheme/hello_gulp.txt
+/testfiles/testtheme/hello_grunt.txt
+/testfiles/testtheme/libraries
