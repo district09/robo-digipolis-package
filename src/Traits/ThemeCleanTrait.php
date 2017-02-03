@@ -2,6 +2,8 @@
 
 namespace DigipolisGent\Robo\Task\Package\Traits;
 
+use DigipolisGent\Robo\Task\Package\ThemeClean;
+
 trait ThemeCleanTrait
 {
     /**
