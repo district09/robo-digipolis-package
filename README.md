@@ -16,7 +16,8 @@ General Packaging/Compile tasks for Robo Task Runner
 
 ## Commands
 
-This package provides default commands wich you can use in your `RoboFile.php` like so:
+This package provides default commands wich you can use in your `RoboFile.php`
+like so:
 
 ```php
 class RoboFile extends \Robo\Tasks
@@ -37,7 +38,9 @@ The name of the archive file that will be created.
 
 ##### DIR
 
-The directory to package. Defaults to the config value `digipolis.root.project` if it is set (see https://github.com/digipolisgent/robo-digipolis-general for more information), or the current working directory otherwise.
+The directory to package. Defaults to the config value `digipolis.root.project`
+if it is set (see <https://github.com/digipolisgent/robo-digipolis-general> for
+more information), or the current working directory otherwise.
 
 #### Options
 
@@ -47,4 +50,25 @@ Comma separated list of filenames to ignore.
 
 ### digipolis:theme-clean
 
+`vendor/bin/robo digipolis:theme-clean [DIR]`
+
+#### Arguments
+
+##### DIR
+
+The theme directory to clean. Defaults to the current working directory.
+
 ### digipolis:theme-compile
+
+`vendor/bin/robo digipolis:theme-compile [DIR] [COMMAND]`
+
+#### Arguments
+
+##### DIR
+
+The directory of the theme to compile. Defaults to the current working
+directory.
+
+##### COMMAND
+
+The grunt/gulp command to execute if grunt or gulp is available.
