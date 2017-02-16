@@ -3,6 +3,7 @@
 namespace DigipolisGent\Robo\Task\Package;
 
 use Robo\Task\Archive\Pack;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 class PackageProject extends Pack
@@ -15,6 +16,21 @@ class PackageProject extends Pack
      * @var string
      */
     protected $dir;
+
+    /**
+     * Filesystem component.
+     *
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $fs;
+
+    /**
+     * The temporary directory that will be used for copying the source
+     * directory and deleting files that should not be in the package.
+     *
+     * @var string
+     */
+    protected $tmpDir;
 
     /**
      * File names to ignore.
@@ -32,13 +48,19 @@ class PackageProject extends Pack
      * @param string $dir
      *   The directory to package. Defaults to digipolis.root.project, or to the
      *   current working directory if that's not set.
+     * @param \Symfony\Component\Filesystem\Filesystem $fs
+     *   Filesystem component to manipulate files.
      */
-    public function __construct($archiveFile, $dir = null)
+    public function __construct($archiveFile, $dir = null, FileSystem $fs = null)
     {
         parent::__construct($archiveFile);
         $this->dir = is_null($dir)
             ? $dir
             : realpath($dir);
+        $this->fs = is_null($fs)
+            ? new Filesystem()
+            : $fs;
+        $this->tmpDir = md5(time());
     }
 
     /**
@@ -66,38 +88,58 @@ class PackageProject extends Pack
      */
     protected function getFiles()
     {
-        $dir = $this->dir;
-        if (is_null($dir)) {
-            $projectRoot = $this->getConfig()->get('digipolis.root.project', null);
-            $dir = is_null($projectRoot)
-                ? getcwd()
-                : $projectRoot;
+        $this->mirrorDir();
+        $this->cleanMirrorDir();
+        $mirrorFinder = new Finder();
+        $mirrorFinder->ignoreDotFiles(false);
+        $add = [];
+        foreach ($mirrorFinder->in($this->tmpDir)->depth(1) as $file) {
+            $add[substr($file->getRealPath(), strlen(realpath($this->tmpDir)) + 1)] = $file->getRealPath();
         }
-        $finder = new Finder();
-        $finder->ignoreDotFiles(false);
+        return $add;
+    }
+
+    protected function mirrorDir()
+    {
+        if (file_exists($this->tmpDir)) {
+            $this->fs->remove($this->tmpDir);
+        }
+
+        $this->fs->mkdir($this->tmpDir);
+
+        $directoryIterator = new \RecursiveDirectoryIterator($this->dir);
+        $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($iterator as $item) {
+            if ($item->isDir()) {
+                $this->fs->mkdir($this->tmpDir . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            }
+            else {
+                $this->fs->copy($item, $this->tmpDir . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            }
+        }
+    }
+
+    /**
+     * Removes files that should not be packaged from the mirrored directory.
+     *
+     * @param string $mirror
+     *   Path to the mirrorred directory.
+     */
+    protected function cleanMirrorDir()
+    {
+        if (empty($this->ignoreFileNames)) {
+            return;
+        }
+        $files = new Finder();
+        $files->in($this->tmpDir);
+        $files->ignoreDotFiles(false);
+        $files->files();
 
         // Ignore files defined by the dev.
         foreach ($this->ignoreFileNames as $fileName) {
-            $finder->notName($fileName);
+            $files->name($fileName);
         }
-        $dirs = [];
-        $finderClone = clone $finder;
-        $finder->in($dir);
-        foreach ($finder as $file) {
-            $realPath = $file->getRealPath();
-            if (is_dir($realPath)) {
-                $subDirFinder = clone $finderClone;
-                // This is a directory that contains files that will be added.
-                // So don't add the directory or files will be added twice.
-                if ($subDirFinder->in($realPath)->files()->count()) {
-                    continue;
-                }
-            }
-
-            $relative = substr($realPath, strlen($dir) + 1);
-            $dirs[$relative] = $realPath;
-        }
-        return $dirs;
+        $this->fs->remove($files);
     }
 
     /**
@@ -105,7 +147,15 @@ class PackageProject extends Pack
      */
     public function run()
     {
+        if (is_null($this->dir)) {
+            $projectRoot = $this->getConfig()->get('digipolis.root.project', null);
+            $this->dir = is_null($projectRoot)
+                ? getcwd()
+                : $projectRoot;
+        }
         $this->add($this->getFiles());
-        return parent::run();
+        $result = parent::run();
+        $this->fs->remove($this->tmpDir);
+        return $result;
     }
 }
