@@ -134,7 +134,7 @@ class PackageProject extends Pack
      */
     protected function mirrorDir()
     {
-        if ($this->useTmpDir) {
+        if (!$this->useTmpDir) {
             $this->tmpDir = $this->dir;
             return;
         }
