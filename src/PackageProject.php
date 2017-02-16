@@ -196,7 +196,9 @@ class PackageProject extends Pack
         }
         $this->add($this->getFiles());
         $result = parent::run();
-        $this->fs->remove($this->tmpDir);
+        if ($this->useTmpDir) {
+            $this->fs->remove($this->tmpDir);
+        }
         return $result;
     }
 }
