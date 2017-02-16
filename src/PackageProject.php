@@ -39,6 +39,13 @@ class PackageProject extends Pack
      */
     protected $ignoreFileNames = [];
 
+    /**
+     * Whether or not to use a temporary directory.
+     *
+     * @var bool
+     */
+    protected $useTmpDir = false;
+
 
     /**
      * Create a new PackageProject task.
@@ -60,7 +67,6 @@ class PackageProject extends Pack
         $this->fs = is_null($fs)
             ? new Filesystem()
             : $fs;
-        $this->tmpDir = md5(time());
     }
 
     /**
@@ -81,6 +87,27 @@ class PackageProject extends Pack
     }
 
     /**
+     * Whether or not to use a temporary directory. Files that should not be
+     * packaged will be deleted when creating the package. When we use a
+     * temporary directory, we copy all the files to that directory and remove
+     * the files that should not be packaged from that temporary directory, so
+     * that your original directory stays the same. If not the files will be
+     * deleted from the original directory.
+     *
+     * @param bool $use
+     *   Whether or not to use a temporary directory.
+     *
+     * @return $this
+     */
+    public function useTmpDir($use = null)
+    {
+        $this->useTmpDir = is_null($use)
+            ? true
+            : $use;
+        return $this;
+    }
+
+    /**
      * Get the files and directories to package.
      *
      * @return array
@@ -93,7 +120,10 @@ class PackageProject extends Pack
         $mirrorFinder = new Finder();
         $mirrorFinder->ignoreDotFiles(false);
         $add = [];
-        foreach ($mirrorFinder->in($this->tmpDir)->depth(1) as $file) {
+        $mirrorFinder
+            ->in($this->tmpDir)
+            ->depth(1);
+        foreach ($mirrorFinder as $file) {
             $add[substr($file->getRealPath(), strlen(realpath($this->tmpDir)) + 1)] = $file->getRealPath();
         }
         return $add;
@@ -104,6 +134,11 @@ class PackageProject extends Pack
      */
     protected function mirrorDir()
     {
+        if ($this->useTmpDir) {
+            $this->tmpDir = $this->dir;
+            return;
+        }
+        $this->tmpDir = md5(time());
         if (file_exists($this->tmpDir)) {
             $this->fs->remove($this->tmpDir);
         }
