@@ -99,6 +99,9 @@ class PackageProject extends Pack
         return $add;
     }
 
+    /**
+     * Mirror the directory to a temp directory.
+     */
     protected function mirrorDir()
     {
         if (file_exists($this->tmpDir)) {
@@ -110,12 +113,15 @@ class PackageProject extends Pack
         $directoryIterator = new \RecursiveDirectoryIterator($this->dir);
         $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $item) {
+            if (is_link($file) && file_exists($file)) {
+                $this->fs->symlink($file->getLinkTarget(), $target);
+                continue;
+            }
             if ($item->isDir()) {
                 $this->fs->mkdir($this->tmpDir . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+                continue;
             }
-            else {
-                $this->fs->copy($item, $this->tmpDir . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-            }
+            $this->fs->copy($item, $this->tmpDir . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
         }
     }
 
