@@ -148,8 +148,8 @@ class PackageProject extends Pack
         $directoryIterator = new \RecursiveDirectoryIterator($this->dir);
         $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $item) {
-            if (is_link($file) && file_exists($file)) {
-                $this->fs->symlink($file->getLinkTarget(), $target);
+            if (is_link($item) && file_exists($item)) {
+                $this->fs->symlink($item->getLinkTarget(), $target);
                 continue;
             }
             if ($item->isDir()) {
