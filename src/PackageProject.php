@@ -118,7 +118,16 @@ class PackageProject extends Pack
     {
         $this->mirrorDir();
         $this->cleanMirrorDir();
-        return array('' => realpath($this->tmpDir));
+        $mirrorFinder = new Finder();
+        $mirrorFinder->ignoreDotFiles(false);
+        $add = [];
+        $mirrorFinder
+            ->in($this->tmpDir)
+            ->depth(0);
+        foreach ($mirrorFinder as $file) {
+            $add[substr($file->getRealPath(), strlen(realpath($this->tmpDir)) + 1)] = $file->getRealPath();
+        }
+        return $add;
     }
 
     /**
