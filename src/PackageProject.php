@@ -118,16 +118,7 @@ class PackageProject extends Pack
     {
         $this->mirrorDir();
         $this->cleanMirrorDir();
-        $mirrorFinder = new Finder();
-        $mirrorFinder->ignoreDotFiles(false);
-        $add = [];
-        $mirrorFinder
-            ->in($this->tmpDir)
-            ->depth(1);
-        foreach ($mirrorFinder as $file) {
-            $add[substr($file->getRealPath(), strlen(realpath($this->tmpDir)) + 1)] = $file->getRealPath();
-        }
-        return $add;
+        return array('' => realpath($this->tmpDir));
     }
 
     /**
@@ -214,37 +205,5 @@ class PackageProject extends Pack
             $this->fs->remove($this->tmpDir);
         }
         return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function archiveTar($archiveFile, $items)
-    {
-        if (!class_exists('Archive_Tar')) {
-            return Result::errorMissingPackage($this, 'Archive_Tar', 'pear/archive_tar');
-        }
-
-        $tarObject = new \Archive_Tar($archiveFile);
-        $addModify = array();
-        foreach ($items as $placementLocation => $filesystemLocation) {
-            $removeDir = $filesystemLocation;
-            $addDir = $placementLocation;
-            if (is_file($filesystemLocation)) {
-                $removeDir = dirname($filesystemLocation);
-                $addDir = dirname($placementLocation);
-                if (basename($filesystemLocation) != basename($placementLocation)) {
-                    return Result::error($this, "Tar archiver does not support renaming files during extraction; could not add $filesystemLocation as $placementLocation.");
-                }
-            }
-            // Group the addModify calls for better performance.
-            $addModify[$addDir . '|' . $removeDir][] = $filesystemLocation;
-        }
-        foreach ($addModify as $modifiers => $dirs) {
-            if (!call_user_func_array(array($tarObject, 'addModify'), array_merge(array($dirs), explode('|', $modifiers)))) {
-                return Result::error($this, "Could not add $filesystemLocation to the archive.");
-            }
-        }
-        return Result::success($this);
     }
 }
