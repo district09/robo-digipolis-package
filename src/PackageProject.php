@@ -2,6 +2,7 @@
 
 namespace DigipolisGent\Robo\Task\Package;
 
+use Robo\Result;
 use Robo\Task\Archive\Pack;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -202,5 +203,37 @@ class PackageProject extends Pack
             $this->fs->remove($this->tmpDir);
         }
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function archiveTar($archiveFile, $items)
+    {
+        if (!class_exists('Archive_Tar')) {
+            return Result::errorMissingPackage($this, 'Archive_Tar', 'pear/archive_tar');
+        }
+
+        $tar_object = new \Archive_Tar($archiveFile);
+        $addModify = array();
+        foreach ($items as $placementLocation => $filesystemLocation) {
+            $p_remove_dir = $filesystemLocation;
+            $p_add_dir = $placementLocation;
+            if (is_file($filesystemLocation)) {
+                $p_remove_dir = dirname($filesystemLocation);
+                $p_add_dir = dirname($placementLocation);
+                if (basename($filesystemLocation) != basename($placementLocation)) {
+                    return Result::error($this, "Tar archiver does not support renaming files during extraction; could not add $filesystemLocation as $placementLocation.");
+                }
+            }
+            // Group the addModify calls for better performance.
+            $addModify[$p_add_dir . '|' . $p_remove_dir][] = $filesystemLocation;
+        }
+        foreach ($addModify as $modifiers => $dirs) {
+            if (!call_user_func_array(array($tar_object, 'addModify'), array_merge(array($dirs), explode('|', $modifiers)))) {
+                return Result::error($this, "Could not add $filesystemLocation to the archive.");
+            }
+        }
+        return Result::success($this);
     }
 }
