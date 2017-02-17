@@ -147,13 +147,13 @@ class PackageProject extends Pack
         $this->fs->mkdir($this->tmpDir);
         $tmpRealPath = realpath($this->tmpDir);
 
-        $directoryIterator = new \RecursiveDirectoryIterator($this->dir);
+        $directoryIterator = new \RecursiveDirectoryIterator($this->dir, \RecursiveDirectoryIterator::SKIP_DOTS);
         $recursiveIterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
         $filterIterator = new \CallbackFilterIterator(
             $recursiveIterator,
             function ($current) use ($tmpRealPath)
             {
-                return !$current->isDot() && strpos($current->getRealPath(), $tmpRealPath) !== 0;
+                return strpos($current->getRealPath(), $tmpRealPath) !== 0;
             }
         );
         foreach ($filterIterator as $item) {
