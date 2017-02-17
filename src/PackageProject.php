@@ -167,10 +167,10 @@ class PackageProject extends Pack
                 continue;
             }
             if ($item->isDir()) {
-                $this->fs->mkdir($this->tmpDir . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+                $this->fs->mkdir($this->tmpDir . DIRECTORY_SEPARATOR . $filterIterator->getSubPathName());
                 continue;
             }
-            $this->fs->copy($item, $this->tmpDir . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            $this->fs->copy($item, $this->tmpDir . DIRECTORY_SEPARATOR . $filterIterator->getSubPathName());
         }
     }
 
