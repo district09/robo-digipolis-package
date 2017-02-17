@@ -153,7 +153,7 @@ class PackageProject extends Pack
             $recursiveIterator,
             function ($current) use ($tmpRealPath)
             {
-                return strpos($current->getRealPath(), $tmpRealPath) !== 0;
+                return !$current->isDot() && strpos($current->getRealPath(), $tmpRealPath) !== 0;
             }
         );
         foreach ($filterIterator as $item) {
