@@ -145,13 +145,24 @@ class PackageProject extends Pack
         }
 
         $this->fs->mkdir($this->tmpDir);
+        $tmpRealPath = realpath($this->tmpDir);
 
         $directoryIterator = new \RecursiveDirectoryIterator($this->dir);
-        $iterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($iterator as $item) {
+        $recursiveIterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
+        $filterIterator = new \CallbackFilterIterator(
+            $recursiveIterator,
+            function ($current) use ($tmpRealPath)
+            {
+                return strpos($current->getRealPath(), $tmpRealPath) !== 0;
+            }
+        );
+        foreach ($filterIterator as $item) {
+            if (strpos($item->getRealPath(), $tmpRealPath) === 0) {
+              continue;
+            }
             if (is_link($item)) {
                 if ($item->getRealPath() !== false) {
-                    $this->fs->symlink($item->getLinkTarget(), $this->tmpDir . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+                    $this->fs->symlink($item->getLinkTarget(), $this->tmpDir . DIRECTORY_SEPARATOR . $filterIterator->getSubPathName());
                 }
                 continue;
             }
@@ -214,23 +225,23 @@ class PackageProject extends Pack
             return Result::errorMissingPackage($this, 'Archive_Tar', 'pear/archive_tar');
         }
 
-        $tar_object = new \Archive_Tar($archiveFile);
+        $tarObject = new \Archive_Tar($archiveFile);
         $addModify = array();
         foreach ($items as $placementLocation => $filesystemLocation) {
-            $p_remove_dir = $filesystemLocation;
-            $p_add_dir = $placementLocation;
+            $removeDir = $filesystemLocation;
+            $addDir = $placementLocation;
             if (is_file($filesystemLocation)) {
-                $p_remove_dir = dirname($filesystemLocation);
-                $p_add_dir = dirname($placementLocation);
+                $removeDir = dirname($filesystemLocation);
+                $addDir = dirname($placementLocation);
                 if (basename($filesystemLocation) != basename($placementLocation)) {
                     return Result::error($this, "Tar archiver does not support renaming files during extraction; could not add $filesystemLocation as $placementLocation.");
                 }
             }
             // Group the addModify calls for better performance.
-            $addModify[$p_add_dir . '|' . $p_remove_dir][] = $filesystemLocation;
+            $addModify[$addDir . '|' . $removeDir][] = $filesystemLocation;
         }
         foreach ($addModify as $modifiers => $dirs) {
-            if (!call_user_func_array(array($tar_object, 'addModify'), array_merge(array($dirs), explode('|', $modifiers)))) {
+            if (!call_user_func_array(array($tarObject, 'addModify'), array_merge(array($dirs), explode('|', $modifiers)))) {
                 return Result::error($this, "Could not add $filesystemLocation to the archive.");
             }
         }
