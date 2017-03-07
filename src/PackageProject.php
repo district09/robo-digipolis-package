@@ -155,8 +155,7 @@ class PackageProject extends Pack
         $recursiveIterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
         $filterIterator = new \CallbackFilterIterator(
             $recursiveIterator,
-            function ($current) use ($tmpRealPath)
-            {
+            function ($current) use ($tmpRealPath) {
                 return strpos($current->getRealPath(), $tmpRealPath) !== 0;
             }
         );
@@ -167,11 +166,14 @@ class PackageProject extends Pack
         ));
         foreach ($filterIterator as $item) {
             if (strpos($item->getRealPath(), $tmpRealPath) === 0) {
-              continue;
+                continue;
             }
             if (is_link($item)) {
                 if ($item->getRealPath() !== false) {
-                    $this->fs->symlink($item->getLinkTarget(), $this->tmpDir . DIRECTORY_SEPARATOR . $filterIterator->getSubPathName());
+                    $this->fs->symlink(
+                        $item->getLinkTarget(),
+                        $this->tmpDir . DIRECTORY_SEPARATOR . $filterIterator->getSubPathName()
+                    );
                 }
                 continue;
             }
