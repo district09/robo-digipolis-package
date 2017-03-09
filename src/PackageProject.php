@@ -118,7 +118,7 @@ class PackageProject extends Pack
     {
         $this->mirrorDir();
         $this->cleanMirrorDir();
-        $this->printTaskInfo('Retreiving files to package.');
+        $this->printTaskInfo('Retrieving files to package.');
         $mirrorFinder = new Finder();
         $mirrorFinder->ignoreDotFiles(false);
         $add = [];
