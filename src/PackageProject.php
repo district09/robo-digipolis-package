@@ -118,6 +118,7 @@ class PackageProject extends Pack
     {
         $this->mirrorDir();
         $this->cleanMirrorDir();
+        $this->printTaskInfo('Retrieving files to package.');
         $mirrorFinder = new Finder();
         $mirrorFinder->ignoreDotFiles(false);
         $add = [];
@@ -143,7 +144,10 @@ class PackageProject extends Pack
         if (file_exists($this->tmpDir)) {
             $this->fs->remove($this->tmpDir);
         }
-
+        $this->printTaskInfo(sprintf(
+            'Creating temporary directory %s.',
+            $this->tmpDir
+        ));
         $this->fs->mkdir($this->tmpDir);
         $tmpRealPath = realpath($this->tmpDir);
 
@@ -151,18 +155,25 @@ class PackageProject extends Pack
         $recursiveIterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
         $filterIterator = new \CallbackFilterIterator(
             $recursiveIterator,
-            function ($current) use ($tmpRealPath)
-            {
+            function ($current) use ($tmpRealPath) {
                 return strpos($current->getRealPath(), $tmpRealPath) !== 0;
             }
         );
+        $this->printTaskInfo(sprintf(
+            'Mirroring directory %s to temporary directory %s.',
+            $this->dir,
+            $tmpRealPath
+        ));
         foreach ($filterIterator as $item) {
             if (strpos($item->getRealPath(), $tmpRealPath) === 0) {
-              continue;
+                continue;
             }
             if (is_link($item)) {
                 if ($item->getRealPath() !== false) {
-                    $this->fs->symlink($item->getLinkTarget(), $this->tmpDir . DIRECTORY_SEPARATOR . $filterIterator->getSubPathName());
+                    $this->fs->symlink(
+                        $item->getLinkTarget(),
+                        $this->tmpDir . DIRECTORY_SEPARATOR . $filterIterator->getSubPathName()
+                    );
                 }
                 continue;
             }
@@ -182,6 +193,7 @@ class PackageProject extends Pack
      */
     protected function cleanMirrorDir()
     {
+        $this->printTaskInfo(sprintf('Cleaning directory %s.', $this->tmpDir));
         if (empty($this->ignoreFileNames)) {
             return;
         }
@@ -211,6 +223,9 @@ class PackageProject extends Pack
         $this->add($this->getFiles());
         $result = parent::run();
         if ($this->useTmpDir) {
+            $this->printTaskInfo(
+                sprintf('Removing temporary directory %s.', $this->tmpDir)
+            );
             $this->fs->remove($this->tmpDir);
         }
         return $result;
