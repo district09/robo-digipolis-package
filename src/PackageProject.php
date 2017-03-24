@@ -117,7 +117,7 @@ class PackageProject extends Pack
     protected function getFiles()
     {
         $this->mirrorDir();
-        $this->cleanMirrorDir();
+        $this->prepareMirrorDir();
         $this->printTaskInfo('Retrieving files to package.');
         $mirrorFinder = new Finder();
         $mirrorFinder->ignoreDotFiles(false);
@@ -187,13 +187,10 @@ class PackageProject extends Pack
 
     /**
      * Removes files that should not be packaged from the mirrored directory.
-     *
-     * @param string $mirror
-     *   Path to the mirrorred directory.
      */
-    protected function cleanMirrorDir()
+    protected function prepareMirrorDir()
     {
-        $this->printTaskInfo(sprintf('Cleaning directory %s.', $this->tmpDir));
+        $this->printTaskInfo(sprintf('Preparing directory %s.', $this->tmpDir));
         if (empty($this->ignoreFileNames)) {
             return;
         }
