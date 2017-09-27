@@ -56,7 +56,7 @@ class ThemeCompile extends ParallelExec
             );
         }
         if (file_exists($this->dir . '/package.json')) {
-            $executable = $this->findExecutable(file_exists($this->dir . '/package.lock') ? 'yarn' : 'npm');
+            $executable = $this->findExecutable(file_exists($this->dir . '/yarn.lock') ? 'yarn' : 'npm');
             $this->processes[] = new Process(
                 $this->receiveCommand($executable . ' install'),
                 $this->dir,
