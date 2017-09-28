@@ -74,6 +74,10 @@ class ThemeCompile extends ParallelExec
         $this->processes = [];
         if (file_exists($this->dir . '/bower.json')) {
             $bower = $this->findExecutable('bower');
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                $bower = $this->findExecutable('node') . ' '
+                    . (strpos($bower, 'call ') === 0 ? substr($bower, 5) : $bower);
+            }
             $this->processes[] = new Process(
                 $this->receiveCommand($bower . ' install'),
                 $this->dir,
