@@ -56,9 +56,9 @@ class ThemeCompile extends ParallelExec
             );
         }
         if (file_exists($this->dir . '/package.json')) {
-            $npm = $this->findExecutable('npm');
+            $executable = $this->findExecutable(file_exists($this->dir . '/yarn.lock') ? 'yarn' : 'npm');
             $this->processes[] = new Process(
-                $this->receiveCommand($npm . ' install'),
+                $this->receiveCommand($executable . ' install'),
                 $this->dir,
                 null,
                 null,
@@ -68,12 +68,16 @@ class ThemeCompile extends ParallelExec
 
         // Grunt/gulp and bower must wait for the previous processes to finish.
         $result =  parent::run();
-        if (!$result->getExitCode() === 0) {
+        if ($result->getExitCode() !== 0) {
             return $result;
         }
         $this->processes = [];
         if (file_exists($this->dir . '/bower.json')) {
             $bower = $this->findExecutable('bower');
+            if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+                $bower = $this->findExecutable('node') . ' '
+                    . (strpos($bower, 'call ') === 0 ? substr($bower, 5) : $bower);
+            }
             $this->processes[] = new Process(
                 $this->receiveCommand($bower . ' install'),
                 $this->dir,
