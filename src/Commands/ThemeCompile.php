@@ -6,11 +6,11 @@ trait ThemeCompile
 {
     use \DigipolisGent\Robo\Task\Package\Traits\ThemeCompileTrait;
 
-    public function digipolisThemeCompile($dir = null, $command = 'compile')
+    public function digipolisThemeCompile($dir = null, $buildCommand = 'compile')
     {
         if (is_callable([$this, 'readProperties'])) {
             $this->readProperties();
         }
-        $this->taskThemeCompile($dir, $command)->run();
+        $this->taskThemeCompile($dir, $buildCommand)->run();
     }
 }
