@@ -55,6 +55,7 @@ trait NpmFindExecutable
             $candidates[] =  $this->dir . '/node_modules';
         }
         $candidates[] = __DIR__ . '/node_modules';
+        $candidates[] = getcwd() . '/node_modules';
         $dirs = [];
         foreach ($candidates as $dir) {
             if (is_dir("$dir")) {
