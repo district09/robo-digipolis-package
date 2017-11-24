@@ -45,6 +45,8 @@ class ThemeCompile extends ParallelExec
      */
     public function run()
     {
+        // Print the output of the compile commands.
+        $this->printed();
         if (file_exists($this->dir . '/Gemfile')) {
             $bundle = $this->findExecutable('bundle');
             $this->processes[] = new Process(
