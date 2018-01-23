@@ -2,10 +2,10 @@
   "name": "klimaatstad",
   "version": "1.0.0",
   "dependencies": {
-    "respond": "fubhy/respond",
-    "selectivizr": "fubhy/selectivizr",
-    "html5shiv": "fubhy/html5shiv",
-    "matchmedia": "fubhy/matchmedia",
-    "pie": "fubhy/pie"
+    "respond": "^1.4.2",
+    "selectivizr": "^1.0.2",
+    "html5shiv": "^3.7.3",
+    "matchMedia": "matchmedia#^0.3.0",
+    "pie": "^1.0.0"
   }
 }
