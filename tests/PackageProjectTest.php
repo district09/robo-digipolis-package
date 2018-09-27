@@ -56,7 +56,10 @@ class PackageProjectTest extends \PHPUnit_Framework_TestCase implements Containe
     {
         $projectPath = realpath(__DIR__ . '/../testfiles');
         $this->getConfig()->set('digipolis.root.project', $projectPath);
-        $result = $this->taskPackageProject($this->tarname)->run();
+        $result = $this
+            ->taskPackageProject($this->tarname)
+            ->useTmpDir(false)
+            ->run();
 
         // Assert response.
         $this->assertEquals('', $result->getMessage());

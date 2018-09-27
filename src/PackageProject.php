@@ -45,7 +45,7 @@ class PackageProject extends Pack
      *
      * @var bool
      */
-    protected $useTmpDir = false;
+    protected $useTmpDir = true;
 
 
     /**
