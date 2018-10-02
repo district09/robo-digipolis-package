@@ -4,6 +4,14 @@ All Notable changes to `digipolisgent/robo-digipolis-package`.
 
 ## [Unreleased]
 
+### Changed
+
+* Fixed [#12]: Use a temporary directory by default when creating an archive.
+
+### Added
+
+* Added this changelog file.
+
 ## [0.1.6]
 
 ### Changed
@@ -104,6 +112,8 @@ All Notable changes to `digipolisgent/robo-digipolis-package`.
 [0.1.0-alpha2]: https://github.com/digipolisgent/robo-digipolis-package/compare/0.1.0-alpha1...0.1.0-alpha2
 [0.1.0-alpha1]: https://github.com/digipolisgent/robo-digipolis-package/releases/tag/0.1.0-alpha1
 
+
+[#12]: https://github.com/digipolisgent/robo-digipolis-package/issues/12
 [#10]: https://github.com/digipolisgent/robo-digipolis-package/issues/10
 [#7]: https://github.com/digipolisgent/robo-digipolis-package/issues/7
 [#4]: https://github.com/digipolisgent/robo-digipolis-package/issues/4
