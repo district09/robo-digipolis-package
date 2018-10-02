@@ -4,9 +4,9 @@ All Notable changes to `digipolisgent/robo-digipolis-package`.
 
 ## [Unreleased]
 
-### Changed
+### Fixed
 
-* Fixed [#12]: Use a temporary directory by default when creating an archive.
+* [#12]: Use a temporary directory by default when creating an archive.
 
 ### Added
 
@@ -20,15 +20,15 @@ All Notable changes to `digipolisgent/robo-digipolis-package`.
 
 ## [0.1.5]
 
-### Changed
+### Fixed
 
-* Fixed the unit tests for PHP7.
+* Unit tests for PHP7.
 
 ## [0.1.4]
 
-### Added
+### Fixed
 
-* Fixed [#10]: Print the output of the compile commands.
+* [#10]: Print the output of the compile commands.
 
 ## [0.1.3]
 
@@ -37,9 +37,9 @@ All Notable changes to `digipolisgent/robo-digipolis-package`.
 * Renamed argument `$command` to `$buildCommand` because Robo doesn't allow for
 an argument named `$command`.
 
-### Added
+### Fixed
 
-* Fixed [#7]: Added yarn support.
+* [#7]: Added yarn support.
 
 ## [0.1.2]
 
@@ -49,9 +49,9 @@ an argument named `$command`.
 
 ## [0.1.1]
 
-### Changed
+### Fixed
 
-* Fixed [#4]: Rename cleanMirrorDir to prepareMirrorDir.
+* [#4]: Rename cleanMirrorDir to prepareMirrorDir.
 
 ## [0.1.0]
 
@@ -66,16 +66,19 @@ an argument named `$command`.
 
 * Avoid adding the tar we're creating to the tar.
 * Skip dot-folders (. and ..) when creating the tar.
-* Fixed undefined variable notices.
 * If the temporary directory is within the directory we're mirroring, don't
 mirror the directory itself.
 * Group addModify calls to Archive_Tar to improve performance.
 * Better check for broken links when mirroring a directory.
-* Fixed the useTmpDir option (logic was reversed).
 * Do not try to remove the temporary directory if we didn't create one.
+* Make the use of a temp dir optional.
+
+### Fixed
+
+* Fixed undefined variable notices.
+* Fixed the useTmpDir option (logic was reversed).
 * Fixed undefined variable target.
 * Fixed undefined variable file.
-* Make the use of a temp dir optional.
 
 ## [0.1.0-alpha3]
 
