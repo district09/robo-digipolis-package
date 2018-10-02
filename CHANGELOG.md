@@ -34,7 +34,8 @@ All Notable changes to `digipolisgent/robo-digipolis-package`.
 
 ### Changed
 
-* Renamed argument `$command` to `$buildCommand` because Robo doesn't allow for an argument named `$command`.
+* Renamed argument `$command` to `$buildCommand` because Robo doesn't allow for
+an argument named `$command`.
 
 ### Added
 
@@ -66,7 +67,8 @@ All Notable changes to `digipolisgent/robo-digipolis-package`.
 * Avoid adding the tar we're creating to the tar.
 * Skip dot-folders (. and ..) when creating the tar.
 * Fixed undefined variable notices.
-* If the temporary directory is within the directory we're mirroring, don't mirror the directory itself.
+* If the temporary directory is within the directory we're mirroring, don't
+mirror the directory itself.
 * Group addModify calls to Archive_Tar to improve performance.
 * Better check for broken links when mirroring a directory.
 * Fixed the useTmpDir option (logic was reversed).
@@ -74,7 +76,6 @@ All Notable changes to `digipolisgent/robo-digipolis-package`.
 * Fixed undefined variable target.
 * Fixed undefined variable file.
 * Make the use of a temp dir optional.
-
 
 ## [0.1.0-alpha3]
 
@@ -111,7 +112,6 @@ All Notable changes to `digipolisgent/robo-digipolis-package`.
 [0.1.0-alpha3]: https://github.com/digipolisgent/robo-digipolis-package/compare/0.1.0-alpha2...0.1.0-alpha3
 [0.1.0-alpha2]: https://github.com/digipolisgent/robo-digipolis-package/compare/0.1.0-alpha1...0.1.0-alpha2
 [0.1.0-alpha1]: https://github.com/digipolisgent/robo-digipolis-package/releases/tag/0.1.0-alpha1
-
 
 [#12]: https://github.com/digipolisgent/robo-digipolis-package/issues/12
 [#10]: https://github.com/digipolisgent/robo-digipolis-package/issues/10
