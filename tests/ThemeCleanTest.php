@@ -19,6 +19,7 @@ class ThemeCleanTest extends \PHPUnit_Framework_TestCase implements ContainerAwa
     use CommandArguments;
     use \Robo\Task\Base\loadTasks;
     use \Robo\Common\ConfigAwareTrait;
+    use \DigipolisGent\Robo\Task\Package\Utility\NpmFindExecutable;
 
     /**
      * Set up the Robo container so that we can create tasks in our tests.
