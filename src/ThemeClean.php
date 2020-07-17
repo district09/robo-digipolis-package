@@ -41,7 +41,7 @@ class ThemeClean extends ParallelExec
                 $bower = $this->findExecutable('node') . ' '
                     . (strpos($bower, 'call ') === 0 ? substr($bower, 5) : $bower);
             }
-            $this->processes[] = new Process(
+            $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand($bower . ' cache clean'),
                 $this->dir,
                 null,
@@ -52,14 +52,14 @@ class ThemeClean extends ParallelExec
             $this->processes = [];
         }
         if (file_exists($this->dir . '/Gemfile')) {
-            $this->processes[] = new Process(
+            $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand('rm -rf vendor/bundle'),
                 $this->dir,
                 null,
                 null,
                 null
             );
-            $this->processes[] = new Process(
+            $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand('rm -rf .bundle'),
                 $this->dir,
                 null,
@@ -69,7 +69,7 @@ class ThemeClean extends ParallelExec
         }
 
         if (file_exists($this->dir . '/package.json')) {
-            $this->processes[] = new Process(
+            $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand('rm -rf node_modules'),
                 $this->dir,
                 null,
@@ -79,7 +79,7 @@ class ThemeClean extends ParallelExec
         }
 
         if (file_exists($this->dir . '/Gruntfile.js') || file_exists($this->dir . '/gulpfile.js')) {
-            $this->processes[] = new Process(
+            $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand('rm -rf .sass-cache'),
                 $this->dir,
                 null,
