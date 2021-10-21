@@ -49,7 +49,7 @@ class ThemeCompile extends ParallelExec
         $this->printed();
         if (file_exists($this->dir . '/Gemfile')) {
             $bundle = $this->findExecutable('bundle');
-            $this->processes[] = new Process(
+            $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand($bundle . ' install --deployment --no-cache'),
                 $this->dir,
                 null,
@@ -59,7 +59,7 @@ class ThemeCompile extends ParallelExec
         }
         if (file_exists($this->dir . '/package.json')) {
             $executable = $this->findExecutable(file_exists($this->dir . '/yarn.lock') ? 'yarn' : 'npm');
-            $this->processes[] = new Process(
+            $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand($executable . ' install'),
                 $this->dir,
                 null,
@@ -80,7 +80,7 @@ class ThemeCompile extends ParallelExec
                 $bower = $this->findExecutable('node') . ' '
                     . (strpos($bower, 'call ') === 0 ? substr($bower, 5) : $bower);
             }
-            $this->processes[] = new Process(
+            $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand($bower . ' install'),
                 $this->dir,
                 null,
@@ -90,7 +90,7 @@ class ThemeCompile extends ParallelExec
         }
         if (file_exists($this->dir . '/Gruntfile.js')) {
             $grunt = $this->findExecutable('grunt');
-            $this->processes[] = new Process(
+            $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand($grunt . ' ' . $this->command),
                 $this->dir,
                 null,
@@ -100,7 +100,7 @@ class ThemeCompile extends ParallelExec
         }
         if (file_exists($this->dir . '/gulpfile.js')) {
             $gulp = $this->findExecutable('gulp') ? : $this->findExecutable('gulp.js');
-            $this->processes[] = new Process(
+            $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand($gulp . ' ' . $this->command),
                 $this->dir,
                 null,
