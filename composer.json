@@ -7,8 +7,8 @@
     "require": {
         "consolidation/robo": "^1.0|^2.0",
         "pear/archive_tar": "^1.4.5",
-        "symfony/debug": "^4|^3.4",
-        "symfony/process": "^4.2"
+        "symfony/debug": "^5|^4|^3.4",
+        "symfony/process": "^5|^4.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~6"
