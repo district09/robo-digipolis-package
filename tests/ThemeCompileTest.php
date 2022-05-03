@@ -5,20 +5,22 @@ namespace DigipolisGent\Tests\Robo\Task\Package;
 use League\Container\ContainerAwareInterface;
 use League\Container\ContainerAwareTrait;
 use PHPUnit\Framework\TestCase;
+use Robo\Collection\CollectionBuilder;
 use Robo\Common\CommandArguments;
 use Robo\Contract\ConfigAwareInterface;
 use Robo\Robo;
 use Robo\TaskAccessor;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
 
 class ThemeCompileTest extends TestCase implements ContainerAwareInterface, ConfigAwareInterface
 {
 
-    use \DigipolisGent\Robo\Task\Package\loadTasks;
+    use \DigipolisGent\Robo\Task\Package\Tasks;
     use TaskAccessor;
     use ContainerAwareTrait;
     use CommandArguments;
-    use \Robo\Task\Base\loadTasks;
+    use \Robo\Task\Base\Tasks;
     use \Robo\Common\ConfigAwareTrait;
 
     protected $themePath;
@@ -26,17 +28,15 @@ class ThemeCompileTest extends TestCase implements ContainerAwareInterface, Conf
     /**
      * Set up the Robo container so that we can create tasks in our tests.
      */
-    public function setUp()
+    public function setUp(): void
     {
-        $container = Robo::createDefaultContainer(null, new NullOutput());
-        $this->logger = new \Symfony\Component\Debug\BufferingLogger();
-        $container->share('logger', $this->logger);
+        $container = Robo::createDefaultContainer();
         $this->setContainer($container);
         $this->setConfig(Robo::config());
         $this->themePath = realpath(__DIR__ . '/../testfiles/testtheme');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         // Manual cleanup.
         $files = [
@@ -46,6 +46,7 @@ class ThemeCompileTest extends TestCase implements ContainerAwareInterface, Conf
             '/libraries',
             '/node_modules',
             '/vendor',
+            '/package-lock.json',
         ];
         foreach ($files as $remove) {
             exec('rm -rf ' . $this->themePath . $remove);
@@ -64,10 +65,8 @@ class ThemeCompileTest extends TestCase implements ContainerAwareInterface, Conf
      */
     public function collectionBuilder()
     {
-        $emptyRobofile = new \Robo\Tasks();
-
-        return $this->getContainer()
-            ->get('collectionBuilder', [$emptyRobofile]);
+        $emptyRobofile = new \Robo\Tasks;
+        return CollectionBuilder::create($this->getContainer(), $emptyRobofile);
     }
 
     public function testRunNpm()
@@ -76,20 +75,18 @@ class ThemeCompileTest extends TestCase implements ContainerAwareInterface, Conf
         rename($this->themePath . '/yarn.lock', $this->themePath . '/yarn.backup.lock');
         $this->runTask();
 
-        $logs = $this->logger->cleanLogs();
-
-        // Second log should containt 'npm install'.
-        $this->assertContains('npm install', $logs[1][1]);
+        // Test if package-lock.json is created, meaning npm was used, not yarn.
+        $this->assertFileExists($this->themePath . '/package-lock.json');
+        $this->assertFileDoesNotExist($this->themePath . '/yarn.lock');
     }
 
     public function testRunYarn()
     {
         $this->runTask();
 
-        $logs = $this->logger->cleanLogs();
-
-        // Second log should containt 'yarn install'.
-        $this->assertContains('yarn install', $logs[1][1]);
+        // Test absence of package-lock.json, meaning npm was used, not yarn.
+        $this->assertFileExists($this->themePath . '/yarn.lock');
+        $this->assertFileDoesNotExist($this->themePath . '/package-lock.json');
     }
 
     protected function runTask()
@@ -103,7 +100,7 @@ class ThemeCompileTest extends TestCase implements ContainerAwareInterface, Conf
         // Assert bower install ran.
         $this->assertFileExists($this->themePath . '/vendor/bundle');
 
-        // Assert npm install ran.
+        // Assert npm/yarn install ran.
         $this->assertFileExists($this->themePath . '/node_modules');
 
         // Assert bower install ran.
