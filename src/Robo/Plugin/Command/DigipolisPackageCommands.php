@@ -17,7 +17,7 @@ class DigipolisPackageCommands extends \Robo\Tasks implements DigipolisPropertie
     public function digipolisThemeCompile(ConsoleIO $io, $dir = null, $buildCommand = 'compile')
     {
         $this->readProperties();
-        return $this->taskThemeCompile($dir, $buildCommand);
+        return $this->taskThemeCompile($dir, $buildCommand)->run();
     }
 
     /**
