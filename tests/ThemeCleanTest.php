@@ -7,6 +7,7 @@ use League\Container\ContainerAwareTrait;
 use PHPUnit\Framework\Constraint\IsTrue;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Util\InvalidArgumentHelper;
+use Robo\Collection\CollectionBuilder;
 use Robo\Common\CommandArguments;
 use Robo\Contract\ConfigAwareInterface;
 use Robo\Robo;
@@ -16,18 +17,18 @@ use Symfony\Component\Console\Output\NullOutput;
 class ThemeCleanTest extends TestCase implements ContainerAwareInterface, ConfigAwareInterface
 {
 
-    use \DigipolisGent\Robo\Task\Package\loadTasks;
+    use \DigipolisGent\Robo\Task\Package\Tasks;
     use TaskAccessor;
     use ContainerAwareTrait;
     use CommandArguments;
-    use \Robo\Task\Base\loadTasks;
+    use \Robo\Task\Base\Tasks;
     use \Robo\Common\ConfigAwareTrait;
     use \DigipolisGent\Robo\Task\Package\Utility\NpmFindExecutable;
 
     /**
      * Set up the Robo container so that we can create tasks in our tests.
      */
-    public function setUp()
+    public function setUp(): void
     {
         $container = Robo::createDefaultContainer(null, new NullOutput());
         $this->setContainer($container);
@@ -42,10 +43,8 @@ class ThemeCleanTest extends TestCase implements ContainerAwareInterface, Config
      */
     public function collectionBuilder()
     {
-        $emptyRobofile = new \Robo\Tasks();
-
-        return $this->getContainer()
-            ->get('collectionBuilder', [$emptyRobofile]);
+        $emptyRobofile = new \Robo\Tasks;
+        return CollectionBuilder::create($this->getContainer(), $emptyRobofile);
     }
 
     public function testRun()
@@ -67,17 +66,17 @@ class ThemeCleanTest extends TestCase implements ContainerAwareInterface, Config
             '/.bundle',
         ];
         foreach ($bundlerFiles as $bundlerFile) {
-          $this->assertFileNotExists($themePath . $bundlerFile);
+          $this->assertFileDoesNotExist($themePath . $bundlerFile);
         }
 
         // Assert cleanup of npm files.
-        $this->assertFileNotExists($themePath . '/node_modules');
+        $this->assertFileDoesNotExist($themePath . '/node_modules');
 
         // Assert cleanup of bower files.
         $this->assertDirectoryIsEmpty(getenv('HOME') . '/.cache/bower/packages');
 
         // Assert cleanup of Grunt/Gulp files.
-        $this->assertFileNotExists($themePath . '/.sass-cache');
+        $this->assertFileDoesNotExist($themePath . '/.sass-cache');
 
     }
 

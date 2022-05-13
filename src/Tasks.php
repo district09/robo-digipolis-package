@@ -2,7 +2,7 @@
 
 namespace DigipolisGent\Robo\Task\Package;
 
-trait loadTasks
+trait Tasks
 {
     use Traits\PackageProjectTrait;
     use Traits\ThemeCleanTrait;

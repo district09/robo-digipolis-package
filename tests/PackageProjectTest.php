@@ -5,6 +5,7 @@ namespace DigipolisGent\Tests\Robo\Task\Package;
 use League\Container\ContainerAwareInterface;
 use League\Container\ContainerAwareTrait;
 use PHPUnit\Framework\TestCase;
+use Robo\Collection\CollectionBuilder;
 use Robo\Common\CommandArguments;
 use Robo\Contract\ConfigAwareInterface;
 use Robo\Robo;
@@ -15,11 +16,11 @@ use Symfony\Component\Finder\Finder;
 class PackageProjectTest extends TestCase implements ContainerAwareInterface, ConfigAwareInterface
 {
 
-    use \DigipolisGent\Robo\Task\Package\loadTasks;
+    use \DigipolisGent\Robo\Task\Package\Tasks;
     use TaskAccessor;
     use ContainerAwareTrait;
     use CommandArguments;
-    use \Robo\Task\Base\loadTasks;
+    use \Robo\Task\Base\Tasks;
     use \Robo\Common\ConfigAwareTrait;
 
     protected $tarname = 'project.tar.gz';
@@ -27,14 +28,14 @@ class PackageProjectTest extends TestCase implements ContainerAwareInterface, Co
     /**
      * Set up the Robo container so that we can create tasks in our tests.
      */
-    public function setUp()
+    public function setUp(): void
     {
         $container = Robo::createDefaultContainer(null, new NullOutput());
         $this->setContainer($container);
         $this->setConfig(Robo::config());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unlink($this->tarname);
     }
@@ -47,10 +48,8 @@ class PackageProjectTest extends TestCase implements ContainerAwareInterface, Co
      */
     public function collectionBuilder()
     {
-        $emptyRobofile = new \Robo\Tasks();
-
-        return $this->getContainer()
-            ->get('collectionBuilder', [$emptyRobofile]);
+        $emptyRobofile = new \Robo\Tasks;
+        return CollectionBuilder::create($this->getContainer(), $emptyRobofile);
     }
 
     public function testRun()
