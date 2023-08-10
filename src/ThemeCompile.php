@@ -95,7 +95,7 @@ class ThemeCompile extends ParallelExec
         if (file_exists($this->dir . '/Gruntfile.js')) {
             $grunt = $this->findExecutable('grunt');
             $this->processes[] = Process::fromShellCommandline(
-                $this->receiveCommand($nvmPrefix . $grunt . ' ' . $this->command),
+                $this->receiveCommand($nvmPrefix . 'grunt ' . $this->command),
                 $this->dir,
                 null,
                 null,
@@ -103,9 +103,8 @@ class ThemeCompile extends ParallelExec
             );
         }
         if (file_exists($this->dir . '/gulpfile.js')) {
-            $gulp = $this->findExecutable('gulp') ? : $this->findExecutable('gulp.js');
             $this->processes[] = Process::fromShellCommandline(
-                $this->receiveCommand($nvmPrefix .  $gulp . ' ' . $this->command),
+                $this->receiveCommand($nvmPrefix .  'gulp ' . $this->command),
                 $this->dir,
                 null,
                 null,
