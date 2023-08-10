@@ -57,11 +57,12 @@ class ThemeCompile extends ParallelExec
                 null
             );
         }
+
+        $nvmPrefix = file_exists($this->dir . '/.nvmrc')
+            ? '. ~/.nvm/nvm.sh && nvm exec '
+            : '';
         if (file_exists($this->dir . '/package.json')) {
-            $executable = file_exists($this->dir . '/.nvmrc')
-                ? '. ~/.nvm/nvm.sh && nvm exec '
-                : '';
-            $executable .= $this->findExecutable(file_exists($this->dir . '/yarn.lock') ? 'yarn' : 'npm');
+            $executable = $nvmPrefix . $this->findExecutable(file_exists($this->dir . '/yarn.lock') ? 'yarn' : 'npm');
             $this->processes[] = Process::fromShellCommandline(
                 $this->receiveCommand($executable . ' install'),
                 $this->dir,
@@ -84,7 +85,7 @@ class ThemeCompile extends ParallelExec
                     . (strpos($bower, 'call ') === 0 ? substr($bower, 5) : $bower);
             }
             $this->processes[] = Process::fromShellCommandline(
-                $this->receiveCommand($bower . ' install'),
+                $this->receiveCommand($nvmPrefix . $bower . ' install'),
                 $this->dir,
                 null,
                 null,
@@ -94,7 +95,7 @@ class ThemeCompile extends ParallelExec
         if (file_exists($this->dir . '/Gruntfile.js')) {
             $grunt = $this->findExecutable('grunt');
             $this->processes[] = Process::fromShellCommandline(
-                $this->receiveCommand($grunt . ' ' . $this->command),
+                $this->receiveCommand($nvmPrefix . $grunt . ' ' . $this->command),
                 $this->dir,
                 null,
                 null,
@@ -104,7 +105,7 @@ class ThemeCompile extends ParallelExec
         if (file_exists($this->dir . '/gulpfile.js')) {
             $gulp = $this->findExecutable('gulp') ? : $this->findExecutable('gulp.js');
             $this->processes[] = Process::fromShellCommandline(
-                $this->receiveCommand($gulp . ' ' . $this->command),
+                $this->receiveCommand($nvmPrefix .  $gulp . ' ' . $this->command),
                 $this->dir,
                 null,
                 null,
