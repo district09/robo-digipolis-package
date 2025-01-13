@@ -1,30 +1,8 @@
 {
     "name": "digipolisgent/robo-digipolis-package",
     "description": "General Packaging/Compile tasks for Robo Task Runner",
-    "type": "robo-tasks",
-    "minimum-stability": "RC",
-    "prefer-stable": true,
-    "require": {
-        "consolidation/robo": "^3.0 || ^4.0",
-        "pear/archive_tar": "^1.4.14",
-        "symfony/error-handler": "^7|^6|^5|^4",
-        "symfony/process": "^7|^6|5|^4",
-        "digipolisgent/robo-digipolis-general": "^2.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.5.20"
-    },
-    "autoload": {
-        "psr-4": {
-            "DigipolisGent\\Robo\\Task\\Package\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "DigipolisGent\\Tests\\Robo\\Task\\Package\\": "tests"
-        }
-    },
     "license": "MIT",
+    "type": "robo-tasks",
     "authors": [
         {
             "name": "Dieter Blomme",
@@ -38,5 +16,27 @@
             "name": "Peter Decuyper",
             "email": "peter.decuyper@digipolis.gent"
         }
-    ]
+    ],
+    "require": {
+        "consolidation/robo": "^4.0 || ^5.0",
+        "digipolisgent/robo-digipolis-general": "^2.0 || ^3.0",
+        "pear/archive_tar": "^1.4.14",
+        "symfony/error-handler": "^6 || ^7",
+        "symfony/process": "^6 || ^7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5.20"
+    },
+    "minimum-stability": "RC",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "DigipolisGent\\Robo\\Task\\Package\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DigipolisGent\\Tests\\Robo\\Task\\Package\\": "tests"
+        }
+    }
 }
