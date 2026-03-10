@@ -70,6 +70,16 @@ class ThemeCompile extends ParallelExec
                 null,
                 null
             );
+            
+            if (file_exists($this->dir . '/gulpfile.js')) {
+                $this->processes[] = Process::fromShellCommandline(
+                    $this->receiveCommand($executable . ' -g install gulp-cli'),
+                    $this->dir,
+                    null,
+                    null,
+                    null
+                );
+            }
         }
 
         // Grunt/gulp and bower must wait for the previous processes to finish.
