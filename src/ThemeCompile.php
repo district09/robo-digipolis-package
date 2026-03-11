@@ -71,7 +71,7 @@ class ThemeCompile extends ParallelExec
                 null
             );
             
-            if (file_exists($this->dir . '/gulpfile.js')) 
+            if (file_exists($this->dir . '/gulpfile.js')) {
                 $gulpInstall = file_exists($this->dir . '/yarn.lock') ? $this->receiveCommand($executable . ' global add gulp-cli') : $this->receiveCommand($executable . ' -g install gulp-cli'); 
                 $this->processes[] = Process::fromShellCommandline(
                     $gulpInstall,
