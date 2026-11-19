@@ -59,7 +59,7 @@ class PackageProject extends Pack
      * @param \Symfony\Component\Filesystem\Filesystem $fs
      *   Filesystem component to manipulate files.
      */
-    public function __construct($archiveFile, $dir = null, FileSystem $fs = null)
+    public function __construct($archiveFile, $dir = null, ?FileSystem $fs = null)
     {
         parent::__construct($archiveFile);
         $this->dir = is_null($dir)
